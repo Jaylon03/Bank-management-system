@@ -4,6 +4,7 @@
 #include<fstream>
 #include<cctype>
 #include<cstring>
+#include <stdio.h>
 
 
 using namespace std;
@@ -15,6 +16,7 @@ class Bank_Account {
     int Money_Deposit;
 
 public:
+    void report() const;
     int retacno() const {
         return account_number;
     }
@@ -25,9 +27,19 @@ public:
 
 };
 
+void Bank_Account::report() const {
+    cout << account_number << setw(10) << " " << name << setw(10) << type << setw(6) << Money_Deposit << endl;
+
+}
+
 void write_account();
 void display_details(int);
 void delete_account(int);
+void display_all();
+void deposit_money(int);
+
+
+
 
 void Bank_Account::create_account() {
     system("cls");
@@ -73,12 +85,12 @@ int main() {
 
         cout << endl;
         cout << "\t --- Main Menu --" << endl;
-        cout << "\t 1. Create Account" << endl;
+        cout << "\t 1. Create Account" << endl; // completed
         cout << "\t 2. Deposit Money" << endl;
         cout << "\t 3. Withdraw Money" << endl;
-        cout << "\t 4.Balance Enquiry" << endl;
-        cout << "\t 5. All Account Holder List" << endl;
-        cout << "\t 6. Close an Account" << endl;
+        cout << "\t 4.Balance Enquiry" << endl; // completed
+        cout << "\t 5. All Account Holder List" << endl; //completed
+        cout << "\t 6. Close an Account" << endl; // Broken
         cout << "\t 7. Modify an Account" << endl;
         cout << "\t 8. Exit" << endl;
         cout << endl;
@@ -97,6 +109,7 @@ int main() {
             cout << "\t Enter Account number: ";
             cin >> num;
             // Desposit function
+            //deposit_money();
 
             break;
         case 3:
@@ -109,7 +122,7 @@ int main() {
 
             cout << "\t Enter Account number: ";
             cin >> num;
-            cout<<endl;
+            cout << endl;
             display_details(num);
             // No need for additional input after displaying details
             break;
@@ -117,14 +130,15 @@ int main() {
             break;
         case 5:
             system("cls");
-            //display_all();
+            display_all();
             //Account holder list function
-            cin >> num;
+
             break;
         case 6:
             system("cls");
             cout << "\t Enter Account number: ";
             cin >> num;
+            cout<<endl;
             delete_account(num);
 
             // Close account function
@@ -146,7 +160,7 @@ int main() {
         cin.ignore();
         cin.get();
     } while (ch != '8');
-        return 0;
+    return 0;
 
 
 }
@@ -161,28 +175,28 @@ void write_account()
     outFile.close();
 }
 
-void delete_account(int n) {
+void delete_account(int n) {// Works but is broken
     Bank_Account ac;
     ifstream inFile; //input file stream
     ofstream outFile; // output file stream
+   
     inFile.open("account.dat", ios::binary);
     if (!inFile) {
         cout << "File could not be open !! Press any key...";
         return;
     }
-    outFile.open("Temp.dat", ios::binary);
+    outFile.open("account_to_delete.dat", ios::binary);
     inFile.seekg(0, ios::beg);
 
     while (inFile.read(reinterpret_cast<char*> (&ac), sizeof(Bank_Account)))
     {
-        if (ac.retacno() != n) {
-            outFile.write(reinterpret_cast<char*> (&ac), sizeof(Bank_Account));
+        if (ac.retacno() == n) {
+            outFile.write((char*)&ac, sizeof(ac)); 
         }
     }
     inFile.close();
     outFile.close();
-    remove("Bank_Account.dat");
-    rename("Temp.dat", "Bank_Account.dat");
+    remove("account_to_delete.dat");
     cout << "\t Record Deleted... " << endl;
 
 }
@@ -209,4 +223,26 @@ void display_details(int n) {
         cout << "\t Account number does not exist" << endl;
     }
 
+}
+void display_all() {
+    system("cls");
+    Bank_Account ac;
+    ifstream inFile;
+    inFile.open("account.dat", ios::binary);
+    if (!inFile) {
+       perror("File could not be open press !! any key...");
+        return;
+    }
+    cout << "\t Bank Account holder List" << endl;
+    cout << "============================================" << endl;
+    cout << "A/c no.       NAME         TYPE  BALANCE" << endl;
+    cout << "============================================" << endl;
+    while (inFile.read(reinterpret_cast<char*> (&ac), sizeof(Bank_Account))) {
+        ac.report();
+    }
+
+}
+
+void deposit_money(int n) {
+    // work in progress
 }
