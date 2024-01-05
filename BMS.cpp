@@ -1,9 +1,10 @@
+
 #include <iostream>
 #include<iomanip>
 #include<fstream>
 #include<cctype>
 #include<cstring>
-#include <wingdi.h>
+
 
 using namespace std;
 
@@ -14,14 +15,14 @@ class Bank_Account {
     int Money_Deposit;
 
 public:
-    int retacno() const{
+    int retacno() const {
         return account_number;
     }
 
     void create_account();
-    
+
     void Display_Account();
-    
+
 };
 
 void write_account();
@@ -58,11 +59,13 @@ void Bank_Account::Display_Account() {
 
 
 int main() {
+
+
     char ch;
     int num;
 
 
-     do{
+    do {
         int choice;
         cout << "\t\t ---------------------------------------" << endl;
         cout << "\t\t | Welcome to the Bank Management System |" << endl;
@@ -86,123 +89,124 @@ int main() {
         Bank_Account account;
 
         switch (choice) {
-            case 1:
-                write_account();
-                break;
-            case 2:
-                system("cls");
-                cout<< "\t Enter Account number: ";
-                cin >> num;
-                // Desposit function
-            
-                break;
-            case 3:
-                system("cls");
-                cout<< "\t Enter Account number: ";
-                //Withdraw function
-                cin >> num;
-                break;
-            case 4:
-                
-                cout << "\t Enter Account number: ";
-                cin >> num;
-                display_details(num);
-                // No need for additional input after displaying details
-                break;
-                
-                break;
-            case 5:
-                system("cls");
-                //display_all();
-                //Account holder list function
-                cin >> num;
-                break;
-            case 6:
-                system("cls");
-                cout<< "\t Enter Account number: ";
-                cin>>num;
-                delete_account(num);
+        case 1:
+            write_account();
+            break;
+        case 2:
+            system("cls");
+            cout << "\t Enter Account number: ";
+            cin >> num;
+            // Desposit function
 
-                // Close account function
-                cin >> num;
-                break;
-            case 7:
-                system("cls");
-                cout<< "\t Enter Account number: ";
-                //Modify account function
-                cin >> num;
-                break;
+            break;
+        case 3:
+            system("cls");
+            cout << "\t Enter Account number: ";
+            //Withdraw function
+            cin >> num;
+            break;
+        case 4:
 
-            case 8:
-                cout << "\t Exiting the program. Goodbye!" << endl;
-                break;
-          
-        } 
-        
+            cout << "\t Enter Account number: ";
+            cin >> num;
+            cout<<endl;
+            display_details(num);
+            // No need for additional input after displaying details
+            break;
+
+            break;
+        case 5:
+            system("cls");
+            //display_all();
+            //Account holder list function
+            cin >> num;
+            break;
+        case 6:
+            system("cls");
+            cout << "\t Enter Account number: ";
+            cin >> num;
+            delete_account(num);
+
+            // Close account function
+            cin >> num;
+            break;
+        case 7:
+            system("cls");
+            cout << "\t Enter Account number: ";
+            //Modify account function
+            cin >> num;
+            break;
+
+        case 8:
+            cout << "\t Exiting the program. Goodbye!" << endl;
+            break;
+
+        }
+
         cin.ignore();
         cin.get();
-    } while(ch!='8')
+    } while (ch != '8');
         return 0;
-    
-    
+
+
 }
 
 void write_account()
 {
     Bank_Account ac;
     ofstream outFile;
-    outFile.open("account.dat", ios::binary|ios::app);
+    outFile.open("account.dat", ios::binary | ios::app);
     ac.create_account();
-    outFile.write(reinterpret_cast<char *> (&ac), sizeof(Bank_Account));
+    outFile.write(reinterpret_cast<char*> (&ac), sizeof(Bank_Account));
     outFile.close();
 }
 
-void delete_account(int num){
+void delete_account(int n) {
     Bank_Account ac;
     ifstream inFile; //input file stream
     ofstream outFile; // output file stream
     inFile.open("account.dat", ios::binary);
-    if(!inFile){
-        cout<<"File could not be open !! Press any key...";
+    if (!inFile) {
+        cout << "File could not be open !! Press any key...";
         return;
     }
     outFile.open("Temp.dat", ios::binary);
-    inFile.seekg(0,ios::beg);
+    inFile.seekg(0, ios::beg);
 
-    while (inFile.read(reinterpret_cast<char *> (&ac), sizeof(Bank_Account)))
+    while (inFile.read(reinterpret_cast<char*> (&ac), sizeof(Bank_Account)))
     {
-        if(ac.retacno() !=n){
-            outFile.write(reinterpret_cast<char *> (&ac), sizeof(Bank_Account));
+        if (ac.retacno() != n) {
+            outFile.write(reinterpret_cast<char*> (&ac), sizeof(Bank_Account));
         }
     }
     inFile.close();
     outFile.close();
     remove("Bank_Account.dat");
     rename("Temp.dat", "Bank_Account.dat");
-    cout<<"\t Record Deleted... "<<endl;
+    cout << "\t Record Deleted... " << endl;
 
 }
 
-void display_details(int n){
+void display_details(int n) {
     Bank_Account ac;
-    bool flag=false;
+    bool flag = false;
     ifstream inFile;
     inFile.open("account.dat", ios::binary);
-    if(!inFile){
-        cout<<"File could not be open !! Press any key...";
+    if (!inFile) {
+        cout << "File could not be open !! Press any key...";
         return;
     }
-    cout<<"\t Bank Account Details"<<endl;
-    while (inFile.read(reinterpret_cast<char *> (&ac), sizeof(Bank_Account)))
+    cout << "\t Bank Account Details" << endl;
+    while (inFile.read(reinterpret_cast<char*> (&ac), sizeof(Bank_Account)))
     {
-        if(ac.retacno()==n){
+        if (ac.retacno() == n) {
             ac.Display_Account();
-            flag=true;
+            flag = true;
         }
     }
     inFile.close();
-    if(flag==false){
-        cout<<"\t Account number does not exist"<<endl;
+    if (flag == false) {
+        cout << "\t Account number does not exist" << endl;
     }
-    
+
 }
