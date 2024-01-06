@@ -111,9 +111,9 @@ int main() {
 
         cout << endl;
         cout << "\t --- Main Menu --" << endl;
-        cout << "\t 1. Create Account" << endl; // completed
-        cout << "\t 2. Deposit Money" << endl; //completed/broken
-        cout << "\t 3. Withdraw Money" << endl; // completed/broken
+        cout << "\t 1. Create Account" << endl; // completed/works
+        cout << "\t 2. Deposit Money" << endl; //completed/workd
+        cout << "\t 3. Withdraw Money" << endl; // completed/works
         cout << "\t 4.Balance Enquiry" << endl; // completed/works
         cout << "\t 5. All Account Holder List" << endl; //completed/works
         cout << "\t 6. Close an Account" << endl; // completed/Broken
@@ -218,9 +218,11 @@ void delete_account(int n) {// Works but is broken
             outFile.write((char*)&ac, sizeof(ac)); 
         }
     }
-    inFile.close();
     outFile.close();
     remove("account_to_delete.dat");
+    inFile.close();
+   
+    
     cout << "\t Record Deleted... " << endl;
 
 }
@@ -272,7 +274,7 @@ void Money_deposit_withdraw(int n ,int option ) {
     bool found = false;
     Bank_Account ac;
     fstream File;
-    File.open("acount.dat", ios::binary|ios::in|ios::out);
+    File.open("account.dat", ios::binary|ios::in|ios::out);
     if(!File){
         cout << "File could not be found !! Press any key";
         return;
